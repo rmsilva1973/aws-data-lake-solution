@@ -7,27 +7,29 @@
     },
     "license": "Apache-2.0",
     "version": "0.0.1",
-    "private": "true",
+    "private": true,
     "dependencies": {
-        "shortid": "^2.2.13",
-        "moment": "^2.22.2",
-        "underscore": "^1.9.1",
-        "jsonwebtoken": "^8.3.0",
-        "jwk-to-pem": "^2.0.0",
-        "request": "^2.88.0",
-        "password-generator": "^2.2.0",
-        "hat": "^0.0.3",
-        "js-base64": "^2.4.9",
-        "access-validator": "file:../../../resources/access-validator/"
+        "axios": "1.7.7",
+        "hat": "0.0.3",
+        "js-base64": "3.7.7",
+        "jsonwebtoken": "9.0.2",
+        "jwk-to-pem": "2.0.6",
+        "moment": "2.30.1",
+        "nanoid": "5.0.8",
+        "password-generator": "2.3.2",
+        "underscore": "1.13.7"
     },
     "devDependencies": {
-        "aws-sdk-mock": "^4.5.0",
-        "chai": "^4.2.0",
-        "chai-things": "^0.2.0",
-        "mocha": "^6.2.2",
-        "npm-run-all": "^4.1.5",
-        "sinon": "^2.4.1",
-        "sinon-chai": "^3.3.0"
+        "@aws-sdk/client-cognito-identity-provider": "^3.679.0",
+        "@aws-sdk/client-dynamodb": "^3.679.0",
+        "@aws-sdk/client-lambda": "^3.680.0",
+        "aws-sdk-client-mock": "4.1.0",
+        "chai": "5.1.2",
+        "chai-things": "0.2.0",
+        "mocha": "10.7.3",
+        "npm-run-all": "4.1.5",
+        "sinon": "19.0.2",
+        "sinon-chai": "4.0.0"
     },
     "scripts": {
         "test": "NODE_PATH=./node_modules mocha lib/*.spec.js",
@@ -37,12 +39,25 @@
         "build": "npm-run-all -s build-init build:copy build:install",
         "zip": "cd dist && zip -rq data-lake-admin-service.zip ."
     },
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "bundledDependencies": [
         "moment",
-        "shortid",
+        "nanoid",
         "jsonwebtoken",
         "jwk-to-pem",
-        "request",
+        "axios",
+        "password-generator",
+        "hat",
+        "js-base64"
+    ],
+    "bundleDependencies": [
+        "moment",
+        "nanoid",
+        "jsonwebtoken",
+        "jwk-to-pem",
+        "axios",
         "password-generator",
         "hat",
         "js-base64"

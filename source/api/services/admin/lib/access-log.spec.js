@@ -1,32 +1,35 @@
 'use strict';
 
-let assert = require('assert');
-let AWS = require('aws-sdk-mock');
+const { mockClient } = require('aws-sdk-client-mock');
+const { DynamoDBClient, GetItemCommand } = require('@aws-sdk/client-dynamodb');
+const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 
 let AccessLog = require('./access-log.js');
 
 describe('AccessLog', function() {
     describe('#logEvent', function() {
 
+        const ddbMock = mockClient(DynamoDBClient);
+        const lambdaMock = mockClient(LambdaClient);
+
         afterEach(function() {
-            AWS.restore('DynamoDB.DocumentClient');
-            AWS.restore('Lambda');
+            ddbMock.reset();
+            lambdaMock.reset();
         });
 
         it('should log an event when logging is enabled', function(done) {
 
-            AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-                callback(null, {
-                    Item: {
-                        setting: {
-                            auditLogging: true
-                        }
+            ddbMock.on(GetItemCommand).resolves({
+                Item: {
+                    setting: {
+                        auditLogging: { BOOL: true }
                     }
-                });
+                }
             });
 
-            AWS.mock('Lambda', 'invoke', function(params, callback) {
-                callback(null, 'completed invoke');
+            lambdaMock.on(InvokeCommand).resolves({
+                StatusCode: 200,
+                Payload: Buffer.from('"completed invoke"')
             });
 
             let _accessLog = new AccessLog();
@@ -42,14 +45,12 @@ describe('AccessLog', function() {
 
         it('should not log an event when logging is disabled', function(done) {
 
-            AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-                callback(null, {
-                    Item: {
-                        setting: {
-                            auditLogging: false
-                        }
+            ddbMock.on(GetItemCommand).resolves({
+                Item: {
+                    setting: {
+                        auditLogging: { BOOL: false }
                     }
-                });
+                }
             });
 
             let _accessLog = new AccessLog();
