@@ -14,20 +14,21 @@
 /**
  * @author Solution Builders
  */
+// @ts-nocheck
 
 'use strict';
 
 console.log('Loading function');
 
-let AWS = require('aws-sdk');
-let jwt = require('jsonwebtoken');
-let request = require('request');
-let jwkToPem = require('jwk-to-pem');
-let _ = require('underscore');
-let Base64 = require('js-base64').Base64;
-let moment = require('moment');
-let crypto = require('crypto');
-let url = require('url');
+import AWS from 'aws-sdk';
+import jwt from 'jsonwebtoken';
+import request from 'request';
+import jwkToPem from 'jwk-to-pem';
+import _ from 'underscore';
+import { Base64 } from 'js-base64';
+import moment from 'moment';
+import crypto from 'crypto';
+import url from 'url';
 
 let userPoolId = '';
 let endpoint = '';

@@ -1,43 +1,47 @@
 {
-    "name": "data-lake-authorizer",
-    "description": "A Lambda function for authorizing access to the Data Lake API",
-    "main": "index.js",
-    "author": {
-        "name": "aws-solutions-builder"
-    },
-    "license": "Apache-2.0",
-    "version": "0.0.1",
-    "private": "true",
-    "dependencies": {
-        "moment": "^2.22.2",
-        "underscore": "^1.9.1",
-        "jsonwebtoken": "^8.3.0",
-        "jwk-to-pem": "^2.0.0",
-        "request": "^2.88.0",
-        "js-base64": "^2.4.9"
-    },
-    "devDependencies": {
-        "chai": "^4.2.0",
-        "sinon": "^2.4.1",
-        "sinon-chai": "^3.3.0",
-        "mocha": "^6.2.2",
-        "aws-sdk-mock": "^4.5.0",
-        "npm-run-all": "^4.1.5"
-    },
-    "scripts": {
-        "test": "mocha *.spec.js",
-        "build-init": "rm -rf dist && rm -f archive.zip && mkdir dist",
-        "build:copy": "cp index.js dist/",
-        "build:install": "cp package.json dist/ && cd dist && npm install --production",
-        "build": "npm-run-all -s build-init build:copy build:install",
-        "zip": "cd dist && zip -rq data-lake-authorizer.zip ."
-    },
-    "bundledDependencies": [
-        "moment",
-        "jsonwebtoken",
-        "jwk-to-pem",
-        "request",
-        "underscore",
-        "js-base64"
-    ]
+  "name": "data-lake-authorizer",
+  "description": "A Lambda function for authorizing access to the Data Lake API",
+  "main": "index.js",
+  "author": {
+    "name": "aws-solutions-builder"
+  },
+  "license": "Apache-2.0",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "axios": "1.7.7",
+    "js-base64": "3.7.7",
+    "jsonwebtoken": "9.0.2",
+    "jwk-to-pem": "2.0.6",
+    "moment": "2.30.1",
+    "underscore": "1.13.7"
+  },
+  "devDependencies": {
+    "aws-sdk-client-mock": "4.1.0",
+    "chai": "5.1.2",
+    "mocha": "10.7.3",
+    "npm-run-all": "4.1.5",
+    "sinon": "19.0.2",
+    "sinon-chai": "4.0.0"
+  },
+  "scripts": {
+    "test": "mocha *.spec.js",
+    "build-init": "rm -rf dist && rm -f archive.zip && mkdir dist",
+    "build:copy": "cp index.js dist/",
+    "build:install": "cp package.json dist/ && cd dist && npm install --production",
+    "build": "npm-run-all -s build-init build:copy build:install",
+    "zip": "cd dist && zip -rq data-lake-authorizer.zip ."
+  },
+  "bundledDependencies": [
+    "moment",
+    "jsonwebtoken",
+    "jwk-to-pem",
+    "underscore",
+    "js-base64"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rmsilva1973/aws-data-lake-solution.git"
+  }
 }

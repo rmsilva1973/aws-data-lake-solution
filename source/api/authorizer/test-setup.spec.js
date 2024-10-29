@@ -1,13 +1,13 @@
-const sinon = require('sinon');
-const chai = require('chai');
-const sinonChai = require('sinon-chai');
+import sinon from 'sinon';
+import { use } from 'chai';
+import sinonChai from 'sinon-chai';
 
 before(function() {
-    chai.use(sinonChai);
+    use(sinonChai);
 });
 
 beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
+    this.sandbox = sinon.createSandbox();
 });
 
 afterEach(function() {
