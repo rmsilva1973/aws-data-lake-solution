@@ -446,67 +446,69 @@ function validateSignature(sig, sak, cb) {
  * @class AuthPolicy
  * @constructor
  */
-function AuthPolicy(principal, awsAccountId, apiOptions) {
-    /**
-     * The AWS account id the policy will be generated for. This is used to create
-     * the method ARNs.
-     *
-     * @property awsAccountId
-     * @type {String}
-     */
-    this.awsAccountId = awsAccountId;
+class AuthPolicy {
+    constructor(principal, awsAccountId, apiOptions) {
+        /**
+         * The AWS account id the policy will be generated for. This is used to create
+         * the method ARNs.
+         *
+         * @property awsAccountId
+         * @type {String}
+         */
+        this.awsAccountId = awsAccountId;
 
-    /**
-     * The principal used for the policy, this should be a unique identifier for
-     * the end user.
-     *
-     * @property principalId
-     * @type {String}
-     */
-    this.principalId = principal;
+        /**
+         * The principal used for the policy, this should be a unique identifier for
+         * the end user.
+         *
+         * @property principalId
+         * @type {String}
+         */
+        this.principalId = principal;
 
-    /**
-     * The policy version used for the evaluation. This should always be "2012-10-17"
-     *
-     * @property version
-     * @type {String}
-     * @default "2012-10-17"
-     */
-    this.version = '2012-10-17';
+        /**
+         * The policy version used for the evaluation. This should always be "2012-10-17"
+         *
+         * @property version
+         * @type {String}
+         * @default "2012-10-17"
+         */
+        this.version = '2012-10-17';
 
-    /**
-     * The regular expression used to validate resource paths for the policy
-     *
-     * @property pathRegex
-     * @type {RegExp}
-     * @default '^\/[/.a-zA-Z0-9-\*]+$'
-     */
-    this.pathRegex = new RegExp('^[/.a-zA-Z0-9-\*]+$');
+        /**
+         * The regular expression used to validate resource paths for the policy
+         *
+         * @property pathRegex
+         * @type {RegExp}
+         * @default '^\/[/.a-zA-Z0-9-\*]+$'
+         */
+        this.pathRegex = new RegExp('^[/.a-zA-Z0-9-\*]+$');
 
-    // these are the internal lists of allowed and denied methods. These are lists
-    // of objects and each object has 2 properties: A resource ARN and a nullable
-    // conditions statement.
-    // the build method processes these lists and generates the approriate
-    // statements for the final policy
-    this.allowMethods = [];
-    this.denyMethods = [];
+        // these are the internal lists of allowed and denied methods. These are lists
+        // of objects and each object has 2 properties: A resource ARN and a nullable
+        // conditions statement.
+        // the build method processes these lists and generates the approriate
+        // statements for the final policy
+        this.allowMethods = [];
+        this.denyMethods = [];
 
-    if (!apiOptions || !apiOptions.restApiId) {
-        this.restApiId = '*';
-    } else {
-        this.restApiId = apiOptions.restApiId;
-    }
+        if (!apiOptions || !apiOptions.restApiId) {
+            this.restApiId = '*';
+        } else {
+            this.restApiId = apiOptions.restApiId;
+        }
 
-    if (!apiOptions || !apiOptions.region) {
-        this.region = '*';
-    } else {
-        this.region = apiOptions.region;
-    }
+        if (!apiOptions || !apiOptions.region) {
+            this.region = '*';
+        } else {
+            this.region = apiOptions.region;
+        }
 
-    if (!apiOptions || !apiOptions.stage) {
-        this.stage = '*';
-    } else {
-        this.stage = apiOptions.stage;
+        if (!apiOptions || !apiOptions.stage) {
+            this.stage = '*';
+        } else {
+            this.stage = apiOptions.stage;
+        }
     }
 };
 
