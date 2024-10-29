@@ -23,6 +23,7 @@
         "@aws-sdk/client-cognito-identity-provider": "^3.679.0",
         "@aws-sdk/client-dynamodb": "^3.679.0",
         "@aws-sdk/client-lambda": "^3.680.0",
+        "@aws-sdk/credential-providers": "^3.679.0",
         "aws-sdk-client-mock": "4.1.0",
         "chai": "5.1.2",
         "chai-things": "0.2.0",
@@ -43,16 +44,6 @@
         "node": ">=18.0.0"
     },
     "bundledDependencies": [
-        "moment",
-        "nanoid",
-        "jsonwebtoken",
-        "jwk-to-pem",
-        "axios",
-        "password-generator",
-        "hat",
-        "js-base64"
-    ],
-    "bundleDependencies": [
         "moment",
         "nanoid",
         "jsonwebtoken",

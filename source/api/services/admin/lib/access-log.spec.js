@@ -4,7 +4,7 @@ const { mockClient } = require('aws-sdk-client-mock');
 const { DynamoDBClient, GetItemCommand } = require('@aws-sdk/client-dynamodb');
 const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 
-let AccessLog = require('./access-log.js');
+let AccessLog = require('./access-log.js').default;
 
 describe('AccessLog', function() {
     describe('#logEvent', function() {
