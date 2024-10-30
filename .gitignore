@@ -10,3 +10,4 @@
 /deployment/open-source/
 /source/console/app/lib/app-variables.js
 *.swp
+.vscode
