@@ -30,7 +30,7 @@ const ddbTable = 'data-lake-settings';
 
 /**
  * Performs search operations such as indexing documents, remove documents and performing searches
- * on the elasticsearch cluster for the data lake contextual package metastore.
+ * on the opensearch cluster for the data lake contextual package metastore.
  *
  * @class metadata
  */
@@ -45,7 +45,7 @@ let metadata = (function() {
     let metadata = function() {};
 
     /**
-     * Performs search on data lake elasticsearch cluster using the keyword terms provided.
+     * Performs search on data lake opensearch cluster using the keyword terms provided.
      * @param {string} term - Keyword terms to search metastore.
      * @param {JSON} ticket - Data lake authorization ticket.
      * @param {search~requestCallback} cb - The callback that handles the response.
@@ -105,7 +105,7 @@ let metadata = (function() {
                     //-------------------------------------------------------------
                     // Execute Search
                     //-------------------------------------------------------------
-                    let client = require('elasticsearch').Client({
+                    let client = require('opensearch').Client({
                         hosts: config.Item.setting.esurl,
                         connectionClass: require('http-aws-es'),
                         amazonES: {
@@ -137,7 +137,7 @@ let metadata = (function() {
     };
 
     /**
-     * Performs multi search on data lake elasticsearch cluster to retrive dashboard information - num of owned and accessible pachages.
+     * Performs multi search on data lake opensearch cluster to retrive dashboard information - num of owned and accessible pachages.
      * @param {JSON} ticket - Data lake authorization ticket.
      * @param {search~requestCallback} cb - The callback that handles the response.
      */
@@ -215,7 +215,7 @@ let metadata = (function() {
                     //-------------------------------------------------------------
                     // Execute Search
                     //-------------------------------------------------------------
-                    let client = require('elasticsearch').Client({
+                    let client = require('opensearch').Client({
                         hosts: `${config.Item.setting.esurl}`,
                         connectionClass: require('http-aws-es'),
                         amazonES: {
@@ -243,8 +243,8 @@ let metadata = (function() {
     };
 
     /**
-     * Indexes a document representing a data lake package to the elasticsearch cluster.
-     * @param {JSON} contentPackage - Data lake package object to index in elasticsearch.
+     * Indexes a document representing a data lake package to the opensearch cluster.
+     * @param {JSON} contentPackage - Data lake package object to index in opensearch.
      * @param {JSON} ticket - Data lake authorization ticket.
      * @param {indexDocument~requestCallback} cb - The callback that handles the response.
      */
@@ -263,7 +263,7 @@ let metadata = (function() {
                 }
 
                 if (!_.isEmpty(config)) {
-                    let client = require('elasticsearch').Client({
+                    let client = require('opensearch').Client({
                         hosts: config.Item.setting.esurl,
                         connectionClass: require('http-aws-es'),
                         amazonES: {
@@ -296,7 +296,7 @@ let metadata = (function() {
     };
 
     /**
-     * Initiates a request to remove a pacakge document from the elasticsearch cluster. It checks
+     * Initiates a request to remove a pacakge document from the opensearch cluster. It checks
      * to see if the document is actually in the cluster, then proceeds to execute the removal of
      * all documents meeting query results.
      * @param {JSON} event - Request event containing package information to delete from index.
@@ -318,7 +318,7 @@ let metadata = (function() {
 
                 if (!_.isEmpty(config)) {
 
-                    let client = require('elasticsearch').Client({
+                    let client = require('opensearch').Client({
                         hosts: config.Item.setting.esurl,
                         connectionClass: require('http-aws-es'),
                         amazonES: {
@@ -456,7 +456,7 @@ let metadata = (function() {
                         return cb({code: 502, message: "Failed to retrieve config."}, null);
                     }
 
-                    let client = require('elasticsearch').Client({
+                    let client = require('opensearch').Client({
                         hosts: config.Item.setting.esurl,
                         connectionClass: require('http-aws-es'),
                         amazonES: {

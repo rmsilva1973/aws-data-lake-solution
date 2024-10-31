@@ -1,12 +1,12 @@
 'use strict';
 
-let assert = require('assert');
-let AWS = require('aws-sdk-mock');
-let es = require('elasticsearch');
-const cAssert = require('chai').assert;
-const expect = require('chai').expect;
+import assert from 'assert';
+import { mock, restore } from 'aws-sdk-mock';
+import aoss from 'opensearch';
+import { assert as cAssert } from 'chai';
+import { expect } from 'chai';
 
-let Metadata = require('../../search/lib/metadata.js');
+import Metadata from '../../search/lib/metadata.js';
 
 describe('Metadata', function() {
     //=============================================================================================
@@ -83,7 +83,7 @@ describe('Metadata', function() {
                 };
             });
 
-            AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
+            mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
                 if (params.TableName == 'data-lake-packages') {
                     if (!params.Key.package_id) {
                         callback(new Error("Invalid package_id"), null);
@@ -120,20 +120,20 @@ describe('Metadata', function() {
             });
 
 
-            AWS.mock('CognitoIdentityServiceProvider', 'adminListGroupsForUser', function(params, callback) {
+            mock('CognitoIdentityServiceProvider', 'adminListGroupsForUser', function(params, callback) {
                 callback(null, {Groups:[{GroupName: "Group 01"}]});
             });
 
         });
 
         afterEach(function() {
-            AWS.restore('DynamoDB.DocumentClient');
-            AWS.restore('CognitoIdentityServiceProvider');
+            restore('DynamoDB.DocumentClient');
+            restore('CognitoIdentityServiceProvider');
         });
 
         it('should return error with no valid configuration', function(done) {
-            AWS.restore('DynamoDB.DocumentClient');
-            AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
+            restore('DynamoDB.DocumentClient');
+            mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
                 callback(null, {});
             });
             let _ticket = {
@@ -195,8 +195,8 @@ describe('Metadata', function() {
         });
 
         it('should return an error with an invalid configuration', function(done) {
-            AWS.restore('DynamoDB.DocumentClient');
-            AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
+            restore('DynamoDB.DocumentClient');
+            mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
                 if (params.TableName == 'data-lake-packages') {
                     callback(null, packageSamples.valid);
                 }

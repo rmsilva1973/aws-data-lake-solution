@@ -5,50 +5,50 @@ Description: "The AWS CloudFormation template for deployment of the AWS Data Lak
 Mappings:
     RegionMap:
         us-east-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         us-east-2:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         us-west-2:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         eu-west-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         eu-west-2:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         eu-central-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         ap-northeast-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         ap-northeast-2:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         ap-southeast-2:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         ap-south-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         ap-southeast-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         sa-east-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         ca-central-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         us-west-1:
-            "InstanceType": "m4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
         eu-west-3:
-            "InstanceType": "r4.large.elasticsearch"
-            "DedicatedMasterType": "t2.small.elasticsearch"
+            "InstanceType": "m5.large.search"
+            "DedicatedMasterType": "t3.small.search"
 
 Resources:
 
@@ -260,8 +260,8 @@ Resources:
                 authenticated: !GetAtt CognitoKibanaAccessRole.Arn
                 unauthenticated: !GetAtt CognitoKibanaAccessRole.Arn
 
-    DataLakeElasticsearchCluster:
-        Type: "AWS::Elasticsearch::Domain"
+    DataLakeOpenSearchCluster:
+        Type: "AWS::OpenSearchService::Domain"
         Metadata:
             cfn_nag:
                 rules_to_suppress:
@@ -269,8 +269,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"       
         Properties:
             DomainName: "data-lake"
-            ElasticsearchVersion: "6.2"
-            ElasticsearchClusterConfig:
+            EngineVersion: "2.15"
+            ClusterConfig:
                 DedicatedMasterEnabled: true
                 InstanceCount: 2
                 ZoneAwarenessEnabled: true
@@ -301,15 +301,15 @@ Resources:
 
 Outputs:
     EsCluster:
-        Description: "Elasticsearch cluster domain endpoint"
-        Value: !GetAtt DataLakeElasticsearchCluster.DomainEndpoint
+        Description: "OpenSearch cluster domain endpoint"
+        Value: !GetAtt DataLakeOpenSearchCluster.DomainEndpoint
 
     ConfigureRoleArn:
         Description: "Kibana Configuration Role ARN"
         Value: !GetAtt CognitoKibanaConfigureRole.Arn
 
     DataLakeESLogGroup:
-        Description: "Elasticsearch Cluster Log Group ARN"
+        Description: "OpenSearch Cluster Log Group ARN"
         Value: !GetAtt DataLakeESLogGroup.Arn
 
     CognitoKibanaIdentityPool:

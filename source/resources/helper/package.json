@@ -9,6 +9,7 @@
     "version": "0.0.1",
     "private": "true",
     "dependencies": {
+        "@aws-sdk/client-opensearch": "^3.683.0",
         "@opensearch-project/opensearch": "^2.12.0",
         "mime-types": "2.1.35",
         "moment": "2.30.1",
@@ -33,6 +34,12 @@
         "zip": "cd dist && zip -rq data-lake-helper.zip ."
     },
     "bundledDependencies": [
+        "moment",
+        "underscore",
+        "password-generator",
+        "uuid"
+    ],
+    "bundleDependencies": [
         "moment",
         "underscore",
         "password-generator",

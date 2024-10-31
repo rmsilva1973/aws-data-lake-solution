@@ -144,7 +144,7 @@ Resources:
             roleArn: !GetAtt DataLakeStorageStack.Outputs.ConfigureRoleArn
             logGroupArn: !GetAtt DataLakeStorageStack.Outputs.DataLakeESLogGroup
             logGroupPolicyName: !Join ["", ["data-lake-es-logs-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
-            customAction: "updateElasticsearchDomainConfig"
+            customAction: "updateOpenSearchDomainConfig"
 
     DataLakeS3Resources:
         Type: "Custom::LoadLambda"

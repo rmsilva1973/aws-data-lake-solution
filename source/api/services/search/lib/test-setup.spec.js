@@ -1,15 +1,17 @@
-const sinon = require('sinon');
-const chai = require('chai');
-const sinonChai = require('sinon-chai');
+import { createSandbox } from 'sinon';
+import { use } from 'chai';
+import sinonChai from 'sinon-chai';
 
 before(function() {
-    chai.use(sinonChai);
+    use(sinonChai);
 });
 
 beforeEach(function() {
-    this.sandbox = sinon.sandbox.create();
+    // Usar sinon.createSandbox() em vez de sinon.sandbox.create()
+    this.sandbox = createSandbox();
 });
 
 afterEach(function() {
+    // Restaurar o sandbox criado
     this.sandbox.restore();
 });

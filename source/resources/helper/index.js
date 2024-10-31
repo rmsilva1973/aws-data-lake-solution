@@ -15,22 +15,22 @@
 
 console.log('Loading function');
 
-const AWS = require('aws-sdk');
-const https = require('https');
-const url = require('url');
-const moment = require('moment');
-const DynamoDBHelper = require('./lib/dynamodb-helper.js');
-const CognitoHelper = require('./lib/cognito-helper.js');
-const ElasticsearchHelper = require('./lib/elasticsearch-helper.js');
-const GlueHelper = require('./lib/glue-helper.js');
-const S3Helper = require('./lib/s3-helper.js');
-const MetricsHelper = require('./lib/metrics-helper.js');
-const UUID = require('uuid');
+import AWS from 'aws-sdk';
+import { request } from 'https';
+import { parse } from 'url';
+import moment from 'moment';
+import DynamoDBHelper from './lib/dynamodb-helper.js';
+import CognitoHelper from './lib/cognito-helper.js';
+import OpensearchHelper from './lib/opensearch-helper.js';
+import GlueHelper from './lib/glue-helper.js';
+import S3Helper from './lib/s3-helper.js';
+import MetricsHelper from './lib/metrics-helper.js';
+import { v4 } from 'uuid';
 
 /**
  * Request handler.
  */
-exports.handler = (event, context, callback) => {
+export function handler(event, context, callback) {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     let responseStatus = 'FAILED';
@@ -89,9 +89,9 @@ exports.handler = (event, context, callback) => {
                     sendResponse(event, callback, context, 'SUCCESS');
                 });
 
-        } else if (event.ResourceProperties.customAction === 'updateElasticsearchDomainConfig') {
-            let _esHelper = new ElasticsearchHelper();
-            _esHelper.deleteResourcePolicy(event.ResourceProperties.logGroupPolicyName,
+        } else if (event.ResourceProperties.customAction === 'updateOpenSearchDomainConfig') {
+            let _aossHelper = new OpensearchHelper();
+            _aossHelper.deleteResourcePolicy(event.ResourceProperties.logGroupPolicyName,
                 function(err, data) {
                     if (err) {
                         console.log(err);
@@ -108,7 +108,7 @@ exports.handler = (event, context, callback) => {
     if (event.RequestType === 'Create') {
         if (event.ResourceProperties.customAction === 'createUuid') {
             responseStatus = 'SUCCESS';
-            responseData = {UUID: UUID.v4()};
+            responseData = {UUID: v4()};
             sendResponse(event, callback, context, responseStatus, responseData);
 
         } else if (event.ResourceProperties.customAction === 'sendMetric') {
@@ -293,7 +293,7 @@ exports.handler = (event, context, callback) => {
                 });
 
         } else if (event.ResourceProperties.customAction === 'configureSearch') {
-            let _esHelper = new ElasticsearchHelper();
+            let _aossHelper = new OpensearchHelper();
 
             _esHelper.createSearchIndex(event.ResourceProperties.clusterUrl,
                 event.ResourceProperties.searchIndex,
@@ -310,9 +310,9 @@ exports.handler = (event, context, callback) => {
                     sendResponse(event, callback, context, responseStatus, responseData);
                 });
 
-        } else if (event.ResourceProperties.customAction === 'updateElasticsearchDomainConfig') {
+        } else if (event.ResourceProperties.customAction === 'updateOpenSearchDomainConfig') {
             let _cognitoHelper = new CognitoHelper();
-            let _esHelper = new ElasticsearchHelper();
+            let _esHelper = new OpensearchHelper();
 
             _cognitoHelper.createUserPoolDomain(event.ResourceProperties.cognitoDomain,
                 event.ResourceProperties.userPoolId,
@@ -324,7 +324,7 @@ exports.handler = (event, context, callback) => {
                         return sendResponse(event, callback, context, responseStatus, responseData);
                     }
 
-                    _esHelper.updateElasticsearchDomainConfig(event.ResourceProperties.identityPoolId,
+                    _aossHelper.updateOpenSearchDomainConfig(event.ResourceProperties.identityPoolId,
                         event.ResourceProperties.roleArn,
                         event.ResourceProperties.userPoolId,
                         event.ResourceProperties.logGroupArn,
@@ -332,7 +332,7 @@ exports.handler = (event, context, callback) => {
                         function(err, data) {
                             if (err) {
                                 responseStatus = 'FAILED';
-                                responseData = {Error: 'Failed to update elasticsearch domain configuration.'};
+                                responseData = {Error: 'Failed to update opensearch domain configuration.'};
                                 console.log([responseData.Error, ':\n', err].join(''));
                                 return sendResponse(event, callback, context, responseStatus, responseData);
                             }
@@ -345,7 +345,7 @@ exports.handler = (event, context, callback) => {
 
         } else if (event.ResourceProperties.customAction === 'federateAccess') {
             let _cognitoHelper = new CognitoHelper();
-            let _esHelper = new ElasticsearchHelper();
+            let _aossHelper = new OpensearchHelper();
 
             _cognitoHelper.addFederationCustomAttributes(event.ResourceProperties.userPoolId,
                 function(err, data) {
@@ -378,7 +378,7 @@ exports.handler = (event, context, callback) => {
                                         return sendResponse(event, callback, context, responseStatus, responseData);
                                     }
 
-                                    _esHelper.federateKibanaAccess(event.ResourceProperties.userPoolId,
+                                    _aossHelper.federateKibanaAccess(event.ResourceProperties.userPoolId,
                                         event.ResourceProperties.adFsHostname,
                                         function(err, data) {
                                             if (err) {
@@ -408,7 +408,7 @@ exports.handler = (event, context, callback) => {
     if (event.RequestType === 'Update') {
         sendResponse(event, callback, context, 'SUCCESS');
     }
-};
+}
 
 /**
  * Sends a response to the pre-signed S3 URL
@@ -427,7 +427,7 @@ let sendResponse = function(event, callback, context, responseStatus, responseDa
     });
 
     console.log('RESPONSE BODY:\n', responseBody);
-    const parsedUrl = url.parse(event.ResponseURL);
+    const parsedUrl = parse(event.ResponseURL);
     const options = {
         hostname: parsedUrl.hostname,
         port: 443,
@@ -439,7 +439,7 @@ let sendResponse = function(event, callback, context, responseStatus, responseDa
         }
     };
 
-    const req = https.request(options, (res) => {
+    const req = request(options, (res) => {
         console.log('STATUS:', res.statusCode);
         console.log('HEADERS:', JSON.stringify(res.headers));
         callback(null, 'Successfully sent stack response!');

@@ -38,7 +38,7 @@ const ddbTable = 'data-lake-packages';
 /**
  * Performs CRUD operations for the data lake package interfacing primarly with the
  * data-lake-packages Amazon DynamoDB table. Additionally, initiates interactions with
- * elastic search cluster for indexing operations.
+ * opensearch cluster for indexing operations.
  *
  * @class contentPackage
  */

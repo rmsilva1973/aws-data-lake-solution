@@ -32,7 +32,7 @@ const ddbTable = 'data-lake-metadata';
 /**
  * Performs CRUD operations for the data lake package metadata interfacing primiarly with the
  * data-lake-metadata Amazon DynamoDB table. Additionally, initiates interactions with
- * elastic search cluster for indexing operations.
+ * open search cluster for indexing operations.
  *
  * @class metadata
  */
